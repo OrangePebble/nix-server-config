@@ -9,7 +9,7 @@ let
   localVars = vars.containers.containers.swag;
   # Find new versions at:
   #  https://github.com/linuxserver/docker-swag/releases
-  swagImage = "lscr.io/linuxserver/swag:5.4.0";
+  swagImage = "lscr.io/linuxserver/swag:5.5.0";
   configDir = funcs.relativeToAbsoluteConfigPath ./config;
   defaultConfigDir = "${vars.containers.dataDir}/swag/config";
   modCacheDir = "${vars.containers.dataDir}/swag/modcache";

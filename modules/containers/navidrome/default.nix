@@ -10,7 +10,7 @@ let
 
   # Find new versions at:
   #  https://github.com/navidrome/navidrome/releases
-  navidromeImage = "ghcr.io/navidrome/navidrome:0.61.0";
+  navidromeImage = "ghcr.io/navidrome/navidrome:0.61.2";
 
   navidromeDataDir = "${vars.containers.dataDir}/navidrome/data";
   navidromeBackupDir = "${vars.containers.dataDir}/navidrome/backup";

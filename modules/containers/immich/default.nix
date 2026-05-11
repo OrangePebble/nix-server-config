@@ -8,9 +8,11 @@
 }:
 let
   localVars = vars.containers.containers;
+  # Find new versions at:
+  #  https://github.com/immich-app/immich/releases
+  immichImage = "ghcr.io/immich-app/immich-server:v2.7.5";
+  machineLearningImage = "ghcr.io/immich-app/immich-machine-learning:v2.7.5";
   # Obtained versions from the release 'docker-compose.yml'.
-  immichImage = "ghcr.io/immich-app/immich-server:v2.6.3";
-  machineLearningImage = "ghcr.io/immich-app/immich-machine-learning:v2.6.3";
   redisImage = "ghcr.io/valkey-io/valkey:9.0.1";
   databaseImage = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0";
 

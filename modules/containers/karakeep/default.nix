@@ -10,12 +10,16 @@ let
 
   # Find new versions at:
   #  https://github.com/karakeep-app/karakeep/releases
-  karakeepVersion = "0.31.0";
+  karakeepVersion = "0.32.0";
   karakeepImage = "ghcr.io/karakeep-app/karakeep:${karakeepVersion}";
   # Find new versions for the following two at:
   #  https://github.com/karakeep-app/karakeep/blob/main/docker/docker-compose.yml
   chromeImage = "gcr.io/zenika-hub/alpine-chrome:124";
-  meilisearchImage = "getmeili/meilisearch:v1.37.0";
+  # https://www.meilisearch.com/docs/resources/migration/updating
+  # This requires more work to update: create snapshot before updating, update, stop systemd
+  #  service, run container with 'meilisearch --experimental-dumpless-upgrade', start systemd
+  #  service.
+  meilisearchImage = "getmeili/meilisearch:v1.41.0";
 
   karakeepDataDir = "${vars.containers.dataDir}/karakeep/data";
   meilisearchDataDir = "${vars.containers.dataDir}/karakeep/meilisearch-data";
