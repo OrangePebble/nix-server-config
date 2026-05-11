@@ -39,6 +39,7 @@ let
       "${configDir}/navidrome.subdomain.conf";
     "${defaultConfigDir}/nginx/proxy-confs/karakeep.subdomain.conf" =
       "${configDir}/karakeep.subdomain.conf";
+    "${defaultConfigDir}/nginx/proxy-confs/vane.subdomain.conf" = "${configDir}/vane.subdomain.conf";
   };
   containerUID = "1000";
   hostUID = toString (
@@ -112,6 +113,7 @@ in
           lldap = "swag-lldap";
           navidrome = "swag-navidrome";
           karakeep = "swag-karakeep";
+          vane = "swag-vane";
           # WARN: Everytime you change this, you need to remove
           #  '${defaultConfigDir}/nginx/resolver.conf' or else the
           #  new networks aren't used.

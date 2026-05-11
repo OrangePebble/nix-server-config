@@ -51,6 +51,7 @@ access_control:
     - domain:
         - 'ldap.orangepebble.net'
         - 'dashboard.orangepebble.net'
+        - 'search.orangepebble.net'
       policy: 'two_factor'
       subject:
         - ['user:pedro']

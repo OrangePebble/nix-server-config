@@ -73,6 +73,8 @@ let
           extraGroups = [ "public" ];
         };
       }
+      { vane.mainGroup = "users"; }
+      { vane-ollama.mainGroup = "users"; }
     ];
     dataDir = "${vars.homeDirectory}/container-data";
     publicDir = "${vars.homeDirectory}/public";

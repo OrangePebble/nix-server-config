@@ -39,6 +39,7 @@ if enable then
       lldap.enable = true;
       navidrome.enable = true;
       karakeep.enable = true;
+      vane.enable = true;
 
       blocky.autoStart = true;
       copyparty.autoStart = true;
@@ -48,6 +49,7 @@ if enable then
       lldap.autoStart = true;
       navidrome.autoStart = true;
       karakeep.autoStart = true;
+      vane.autoStart = true;
     };
 
     # Run 'systemd-tmpfiles' to apply these rules manually.
