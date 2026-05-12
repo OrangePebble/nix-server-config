@@ -13,7 +13,6 @@
     luarocks # Lua package manager used by some plugins.
     lua51Packages.lua # Version lazy.nvim (with :checkhealth) says it needs.
     tree-sitter
-    glib # Contains 'gio' which is used by the file explorer to remove files.
     gcc # Required to compile treesitter parsers.
     gnumake # Required for LuaSnip.
     unzip # Used to install packages with Mason.
@@ -26,6 +25,10 @@
     # quickshell (.qml)
     # qmllint requires more configuration that I don't know how to do.
     kdePackages.qtdeclarative
+    clang-tools # C/C++ LSP/linter/formatter.
+    cmake-language-server
+    gersemi # cmake formatter.
+    cmake-lint
   ];
   programs.neovim = {
     enable = true;
