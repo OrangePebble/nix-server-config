@@ -42,6 +42,7 @@ access_control:
     - domain:
         - 'files.orangepebble.net'
         - 'music.orangepebble.net'
+        - 'ai.orangepebble.net'
       policy: 'two_factor'
 
     # - domain:
@@ -51,7 +52,6 @@ access_control:
     - domain:
         - 'ldap.orangepebble.net'
         - 'dashboard.orangepebble.net'
-        - 'search.orangepebble.net'
       policy: 'two_factor'
       subject:
         - ['user:pedro']
@@ -126,6 +126,29 @@ identity_providers:
           - 'authorization_code'
         access_token_signed_response_alg: 'RS256'
         userinfo_signed_response_alg: 'RS256'
+        token_endpoint_auth_method: 'client_secret_basic'
+
+      - client_id: 'open-webui'
+        client_name: 'Open WebUI'
+        authorization_policy: 'two_factor'
+        # Generated using `authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986`.
+        client_secret: '$pbkdf2-sha512$310000$nN8iP53aC1474t1jvdjlkA$aOT/MJzElu8EVfy5NKqJzouiX6y3nLBMDE35HZy/nLoSKQFuLsb47fPCaViagSKHC5jY5Zvt70KShJennK1KgQ'
+        public: false
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'https://ai.orangepebble.net/oauth/oidc/callback'
+        scopes:
+          - 'openid'
+          - 'profile'
+          - 'groups'
+          - 'email'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'authorization_code'
+        access_token_signed_response_alg: 'none'
+        userinfo_signed_response_alg: 'none'
         token_endpoint_auth_method: 'client_secret_basic'
 
 authentication_backend:
