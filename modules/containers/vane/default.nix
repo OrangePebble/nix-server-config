@@ -50,29 +50,27 @@ in
 
     hm = {
       virtualisation.quadlet = {
-        # INFO: This takes way too long so just enable it when needed to build the image.
-        # builds = {
-        #   # The URLs used can only be changed at build time for some weird/lazy reason.
-        #   vane = {
-        #     serviceConfig = {
-        #       # The build takes a very long time. Took a bit over 1h fully cached at startup.
-        #       TimeoutStartSec = 99999;
-        #     };
-        #     buildConfig = {
-        #       tag = "vane:${vaneVersion}";
-        #       workdir = "${pkgs.fetchFromGitHub {
-        #         owner = "ItzCrazyKns";
-        #         repo = "Vane";
-        #         rev = vaneVersion;
-        #         hash = "sha256-mQx2ZTUkTRbtcOZciyRpjH6G391oslAXRzjWBO1NKg8=";
-        #       }}";
-        #       buildArgs = {
-        #         NEXT_PUBLIC_API_URL = "https://search.orangepebble.net/api";
-        #         NEXT_PUBLIC_WS_URL = "wss://search.orangepebble.net/ws";
-        #       };
-        #     };
-        #   };
-        # };
+        builds = {
+          # The URLs used can only be changed at build time for some weird/lazy reason.
+          vane = {
+            # INFO: This takes way too long so, when needed, just run the command in:
+            #  ~/.config/systemd/user/vane-build.service.d/override.conf
+            autoStart = false;
+            buildConfig = {
+              tag = "vane:${vaneVersion}";
+              workdir = "${pkgs.fetchFromGitHub {
+                owner = "ItzCrazyKns";
+                repo = "Vane";
+                rev = vaneVersion;
+                hash = "sha256-mQx2ZTUkTRbtcOZciyRpjH6G391oslAXRzjWBO1NKg8=";
+              }}";
+              buildArgs = {
+                NEXT_PUBLIC_API_URL = "https://vane:3000/api";
+                NEXT_PUBLIC_WS_URL = "wss://vane:3000/ws";
+              };
+            };
+          };
+        };
         containers = {
           vane = funcs.containers.mkConfig "root" localVars.vane {
             inherit (config.opts.containers.vane) autoStart;
