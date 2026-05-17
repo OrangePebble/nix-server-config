@@ -27,6 +27,8 @@ let
       "lldap"
       "lldap-postgres"
       "navidrome"
+      "forgejo"
+      "forgejo-postgres"
     ];
     # Unfortunately, I need to make this a list if I want to keep the order in
     #  the modifying function below. If I used an attrset, they would be sorted
@@ -74,6 +76,8 @@ let
         };
       }
       { open-webui.mainGroup = "users"; }
+      { forgejo.mainGroup = "forgejo"; }
+      { forgejo-postgres.mainGroup = "forgejo-postgres"; }
     ];
     dataDir = "${vars.homeDirectory}/container-data";
     publicDir = "${vars.homeDirectory}/public";

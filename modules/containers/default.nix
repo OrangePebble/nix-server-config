@@ -40,6 +40,7 @@ if enable then
       navidrome.enable = true;
       karakeep.enable = true;
       open-webui.enable = true;
+      forgejo.enable = true;
 
       blocky.autoStart = true;
       copyparty.autoStart = true;
@@ -50,6 +51,7 @@ if enable then
       navidrome.autoStart = true;
       karakeep.autoStart = true;
       open-webui.autoStart = true;
+      forgejo.autoStart = true;
     };
 
     # Run 'systemd-tmpfiles' to apply these rules manually.

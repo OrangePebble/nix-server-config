@@ -41,6 +41,8 @@ let
       "${configDir}/karakeep.subdomain.conf";
     "${defaultConfigDir}/nginx/proxy-confs/open-webui.subdomain.conf" =
       "${configDir}/open-webui.subdomain.conf";
+    "${defaultConfigDir}/nginx/proxy-confs/forgejo.subdomain.conf" =
+      "${configDir}/forgejo.subdomain.conf";
   };
   containerUID = "1000";
   hostUID = toString (
@@ -115,6 +117,7 @@ in
           navidrome = "swag-navidrome";
           karakeep = "swag-karakeep";
           open-webui = "swag-open-webui";
+          forgejo = "swag-forgejo";
           # WARN: Everytime you change this, you need to remove
           #  '${defaultConfigDir}/nginx/resolver.conf' or else the
           #  new networks aren't used.

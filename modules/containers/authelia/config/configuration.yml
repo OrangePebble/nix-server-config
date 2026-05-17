@@ -52,6 +52,7 @@ access_control:
     - domain:
         - 'ldap.orangepebble.net'
         - 'dashboard.orangepebble.net'
+        - 'git.orangepebble.net'
       policy: 'two_factor'
       subject:
         - ['user:pedro']
@@ -76,10 +77,17 @@ identity_providers:
             attribute: 'immich_quota'
       karakeep_policy:
         id_token: ['email']
+      forgejo:
+        custom_claims:
+          sshpubkey:
+            attribute: 'forgejo_sshpubkey'
     scopes:
       immich_scope:
         claims:
           - 'immich_quota'
+      forgejo:
+        claims:
+          - sshpubkey
     clients:
       - client_id: 'immich'
         client_name: 'immich'
@@ -105,6 +113,7 @@ identity_providers:
           - 'authorization_code'
         userinfo_signed_response_alg: 'RS256'
         token_endpoint_auth_method: 'client_secret_post'
+
       - client_id: 'karakeep'
         client_name: 'Karakeep'
         authorization_policy: 'two_factor'
@@ -151,6 +160,31 @@ identity_providers:
         userinfo_signed_response_alg: 'none'
         token_endpoint_auth_method: 'client_secret_basic'
 
+      - client_id: 'forgejo'
+        client_name: 'Forgejo'
+        authorization_policy: 'two_factor'
+        # Generated using `authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986`.
+        client_secret: '$pbkdf2-sha512$310000$uq3jLbMlggwlUiGV1P4nnw$wRkffC7HjfeUTCuxDm7Eq7caE8T5pUFIjsPD./YUtUare3TzWNN0u0eUBAeDpFQrkRL/EodWWe6B5UQ1S1xNMA'  # The digest of 'insecure_secret'.
+        public: false
+        require_pkce: true
+        pkce_challenge_method: 'S256'
+        redirect_uris:
+          - 'https://git.orangepebble.net/user/oauth2/authelia/callback'
+        scopes:
+          - 'openid'
+          - 'email'
+          - 'profile'
+          - 'groups'
+          - 'forgejo'
+        claims_policy: 'forgejo'
+        response_types:
+          - 'code'
+        grant_types:
+          - 'authorization_code'
+        access_token_signed_response_alg: 'none'
+        userinfo_signed_response_alg: 'none'
+        token_endpoint_auth_method: 'client_secret_basic'
+
 authentication_backend:
   ldap:
     implementation: 'lldap'
@@ -166,10 +200,16 @@ authentication_backend:
     users_filter: (&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person)(!({username_attribute}=authelia))(!({username_attribute}=admin)))
     attributes:
       extra:
-        immichquota: # The attribute name from LDAP
+        # The attribute names from LDAP.
+        # These are added manually in the LDAP interface.
+        immichquota:
           name: 'immich_quota'
           multi_valued: false
           value_type: 'integer'
+        forgejosshpubkey:
+          name: 'forgejo_sshpubkey'
+          multi_valued: true
+          value_type: 'string'
 
 session:
   cookies:
