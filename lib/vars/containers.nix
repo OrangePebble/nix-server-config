@@ -29,6 +29,7 @@ let
       "navidrome"
       "forgejo"
       "forgejo-postgres"
+      "anubis"
     ];
     # Unfortunately, I need to make this a list if I want to keep the order in
     #  the modifying function below. If I used an attrset, they would be sorted
@@ -63,7 +64,13 @@ let
       { immich-machine-learning.mainGroup = "immich-machine-learning"; }
       { immich-redis = { }; }
       { immich-database.mainGroup = "immich-database"; }
-      { swag.mainGroup = "swag"; }
+      {
+        swag = {
+          mainGroup = "swag";
+          # For access to the Anubis UNIX socket.
+          extraGroups = [ "anubis" ];
+        };
+      }
       { authelia.mainGroup = "authelia"; }
       { authelia-valkey.mainGroup = "authelia-valkey"; }
       { authelia-postgres.mainGroup = "authelia-postgres"; }
@@ -78,6 +85,7 @@ let
       { open-webui.mainGroup = "users"; }
       { forgejo.mainGroup = "forgejo"; }
       { forgejo-postgres.mainGroup = "forgejo-postgres"; }
+      { anubis.mainGroup = "anubis"; }
     ];
     dataDir = "${vars.homeDirectory}/container-data";
     publicDir = "${vars.homeDirectory}/public";

@@ -118,6 +118,7 @@ in
           karakeep = "swag-karakeep";
           open-webui = "swag-open-webui";
           forgejo = "swag-forgejo";
+          anubis = "swag-anubis";
           # WARN: Everytime you change this, you need to remove
           #  '${defaultConfigDir}/nginx/resolver.conf' or else the
           #  new networks aren't used.
@@ -171,6 +172,7 @@ in
                 volumes = [
                   "${defaultConfigDir}:/config"
                   "${modCacheDir}:/modcache"
+                  "${vars.containers.dataDir}/anubis/socket:/run/anubis"
                 ]
                 ++ (map (x: "${x}:${x}") (builtins.attrValues symlinks));
                 networks = builtins.attrValues networks;

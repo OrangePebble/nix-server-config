@@ -35,7 +35,7 @@ in
       "d ${forgejoDataDir} 2770 ${vars.username} ${localVars.forgejo.mainGroup} - -"
       "Z ${forgejoDataDir}/* 770 ${vars.username} ${localVars.forgejo.mainGroup} - -"
       "d ${postgresDataDir} 2770 ${vars.username} ${localVars.forgejo-postgres.mainGroup} - -"
-      "Z ${postgresDataDir}/* 770 ${vars.username} ${localVars.forgejo-postgres.mainGroup} - -"
+      # "Z ${postgresDataDir}/* 770 ${vars.username} ${localVars.forgejo-postgres.mainGroup} - -"
     ];
 
     secrets =
@@ -102,6 +102,8 @@ in
                 FORGEJO__cache__ADAPTER = "twoqueue";
                 FORGEJO__cache__HOST = ''{"size":100, "recent_ratio":0.25, "ghost_ratio":0.5}'';
                 FORGEJO__security__LOGIN_REMEMBER_DAYS = "365";
+
+                FORGEJO__server__DISABLE_SSH = "true";
               };
               volumes = [
                 "${forgejoDataDir}:/var/lib/gitea"

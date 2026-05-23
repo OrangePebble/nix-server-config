@@ -14,6 +14,7 @@ access_control:
   # https://www.authelia.com/configuration/security/access-control/#rule-matching
   rules:
     - domain:
+        - 'git.orangepebble.net'
         # Uses Authelia as OAuth but shouldn't be behind it.
         - 'gallery.orangepebble.net'
         - 'bookmarks.orangepebble.net'
@@ -52,7 +53,6 @@ access_control:
     - domain:
         - 'ldap.orangepebble.net'
         - 'dashboard.orangepebble.net'
-        - 'git.orangepebble.net'
       policy: 'two_factor'
       subject:
         - ['user:pedro']

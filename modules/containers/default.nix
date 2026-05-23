@@ -41,6 +41,7 @@ if enable then
       karakeep.enable = true;
       open-webui.enable = true;
       forgejo.enable = true;
+      anubis.enable = true;
 
       blocky.autoStart = true;
       copyparty.autoStart = true;
@@ -52,6 +53,7 @@ if enable then
       karakeep.autoStart = true;
       open-webui.autoStart = true;
       forgejo.autoStart = true;
+      anubis.autoStart = true;
     };
 
     # Run 'systemd-tmpfiles' to apply these rules manually.
