@@ -43,7 +43,7 @@ if enable then
       forgejo.enable = true;
       anubis.enable = true;
 
-      blocky.autoStart = true;
+      blocky.autoStart = false;
       copyparty.autoStart = true;
       immich.autoStart = true;
       swag.autoStart = true;
