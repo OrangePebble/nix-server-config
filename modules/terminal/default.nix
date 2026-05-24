@@ -77,10 +77,11 @@
     git = {
       enable = true;
       config = {
-        init.defaultBranch = "master";
+        init.defaultBranch = "main";
         user.name = "p-laranjinha";
         user.email = "plcasimiro2000@gmail.com";
 
+        credential.helper = "store";
         core.pager = "delta";
         interactive.diffFilter = "delta --color-only";
         delta = {
@@ -148,6 +149,9 @@
 
     # Calculator used by my zsh prompt to calculate run times.
     bc
+
+    # Adds the `git credential-oauth` command to authenticate to Forejo (and others) using OAuth.
+    git-credential-oauth
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
