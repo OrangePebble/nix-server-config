@@ -22,6 +22,13 @@ let
 
   forgejoDataDir = "${vars.containers.dataDir}/forgejo/data";
   postgresDataDir = "${vars.containers.dataDir}/forgejo/postgres-data";
+
+  containerUID = "1000";
+  hostUID = toString (
+    (lib.toInt containerUID)
+    + vars.containers.uidGidCount * localVars.forgejo.i
+    + (builtins.elemAt config.users.users.${vars.username}.subUidRanges 0).startUid
+  );
 in
 {
   options.opts.containers.forgejo = {
@@ -32,8 +39,8 @@ in
   config = lib.mkIf config.opts.containers.forgejo.enable {
     systemd.tmpfiles.rules = [
       "d ${vars.containers.dataDir}/forgejo 2770 ${vars.username} ${localVars.forgejo.mainGroup} - -"
-      "d ${forgejoDataDir} 2770 ${vars.username} ${localVars.forgejo.mainGroup} - -"
-      "Z ${forgejoDataDir}/* 770 ${vars.username} ${localVars.forgejo.mainGroup} - -"
+      "d ${forgejoDataDir} 2770 ${hostUID} ${localVars.forgejo.mainGroup} - -"
+      "Z ${forgejoDataDir}/* 770 ${hostUID} ${localVars.forgejo.mainGroup} - -"
       "d ${postgresDataDir} 2770 ${vars.username} ${localVars.forgejo-postgres.mainGroup} - -"
       # "Z ${postgresDataDir}/* 770 ${vars.username} ${localVars.forgejo-postgres.mainGroup} - -"
     ];
@@ -69,7 +76,7 @@ in
     hm = {
       virtualisation.quadlet = {
         containers = {
-          forgejo = funcs.containers.mkConfig "1000" localVars.forgejo {
+          forgejo = funcs.containers.mkConfig containerUID localVars.forgejo {
             inherit (config.opts.containers.forgejo) autoStart;
             unitConfig.Requires = "forgejo-postgres.container";
             containerConfig = {
@@ -78,7 +85,7 @@ in
                 config.secrets.forgejo-postgres-password.path
               ];
               environments = {
-                USER_UID = "1000";
+                USER_UID = containerUID;
                 USER_GID = funcs.containers.getContainerGid localVars.forgejo.mainGroup;
                 FORGEJO____APP_SLOGAN = "";
                 FORGEJO__database__DB_TYPE = "postgres";
