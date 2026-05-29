@@ -26,6 +26,8 @@ in
       "d ${anubisDataDir} 2770 ${vars.username} ${localVars.anubis.mainGroup} - -"
       "Z ${anubisDataDir}/* 770 ${vars.username} ${localVars.anubis.mainGroup} - -"
       "d ${vars.containers.dataDir}/anubis/socket 2770 ${vars.username} ${localVars.anubis.mainGroup} - -"
+      # Removing old socket on boot. Otherwise swag errors that the address is in use.
+      "r ${vars.containers.dataDir}/anubis/socket/nginx.sock - - - - -"
     ];
 
     secrets =
