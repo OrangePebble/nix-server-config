@@ -1,61 +1,61 @@
 # https://github.com/authelia/authelia/blob/40aeb8fc978322dbc2abe92b496357e876dcc92a/examples/compose/lite/authelia/configuration.yml
 
 server:
-  address: 'tcp://:9091'
+  address: "tcp://:9091"
 
 log:
-  level: 'trace'
+  level: "trace"
 
 totp:
-  issuer: 'orangepebble.net'
+  issuer: "orangepebble.net"
 
 access_control:
-  default_policy: 'deny'
+  default_policy: "deny"
   # https://www.authelia.com/configuration/security/access-control/#rule-matching
   rules:
     - domain:
-        - 'git.orangepebble.net'
+        - "git.orangepebble.net"
         # Uses Authelia as OAuth but shouldn't be behind it.
-        - 'gallery.orangepebble.net'
-        - 'bookmarks.orangepebble.net'
-      policy: 'bypass'
+        - "gallery.orangepebble.net"
+        - "bookmarks.orangepebble.net"
+      policy: "bypass"
 
     - domain:
-        - 'files.orangepebble.net'
+        - "files.orangepebble.net"
       resources:
         # Bypass auth so its possible to share files with anyone.
-        - '/shares'
+        - "/shares"
         # https://github.com/9001/copyparty/issues/84#issuecomment-2296785662
         # Bypass auth for UI files.
         - '^/\.cpr/[a-z0-9]+\.[a-z0-9\.]+$'
         - '^/\.cpr/(tl/|deps/)?[a-z0-9]+\.[a-z0-9\.]+(\?.+)?$'
-      policy: 'bypass'
+      policy: "bypass"
 
     - domain:
-        - 'music.orangepebble.net'
+        - "music.orangepebble.net"
       resources:
         # Bypass auth so its possible to share files with anyone.
-        - '/share/*'
+        - "/share/*"
         # Bypass auth so its possible to use the Subsonic API.
-        - '/rest/*'
-      policy: 'bypass'
+        - "/rest/*"
+      policy: "bypass"
 
     - domain:
-        - 'files.orangepebble.net'
-        - 'music.orangepebble.net'
-        - 'ai.orangepebble.net'
-      policy: 'two_factor'
+        - "files.orangepebble.net"
+        - "music.orangepebble.net"
+        - "ai.orangepebble.net"
+      policy: "two_factor"
 
     # - domain:
     #     - 'search.orangepebble.net'
     #   policy: 'one_factor'
 
     - domain:
-        - 'ldap.orangepebble.net'
-        - 'dashboard.orangepebble.net'
-      policy: 'two_factor'
+        - "ldap.orangepebble.net"
+        - "dashboard.orangepebble.net"
+      policy: "two_factor"
       subject:
-        - ['user:pedro']
+        - ["user:pedro"]
 
     # Best way to do ACL safely is to only give access to what's specifically
     #  defined. That way I can't forget to revoke access to private subdomains.
@@ -68,129 +68,131 @@ access_control:
 identity_providers:
   oidc:
     jwks:
-      - key: {{ secret (mustEnv "OIDC_JWKS_KEY_FILE") | mindent 10 "|" | msquote }}
+      # Template has to be put below a '|' so that formatting doesn't mess it up
+      - key: |
+          {{ secret (mustEnv "OIDC_JWKS_KEY_FILE") | mindent 10 "|" | msquote }}
     # The 'immich_quota' is to be able to set a user's storage quota.
     claims_policies:
       immich_policy:
         custom_claims:
           immich_quota:
-            attribute: 'immich_quota'
+            attribute: "immich_quota"
       karakeep_policy:
-        id_token: ['email']
+        id_token: ["email"]
       forgejo:
         custom_claims:
           sshpubkey:
-            attribute: 'forgejo_sshpubkey'
+            attribute: "forgejo_sshpubkey"
     scopes:
       immich_scope:
         claims:
-          - 'immich_quota'
+          - "immich_quota"
       forgejo:
         claims:
           - sshpubkey
     clients:
-      - client_id: 'immich'
-        client_name: 'immich'
-        authorization_policy: 'two_factor'
+      - client_id: "immich"
+        client_name: "immich"
+        authorization_policy: "two_factor"
         # Generated using `authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986`.
-        client_secret: '$pbkdf2-sha512$310000$D2MkioGCj5SZbULAMyTixQ$QFENPGLjD5p4fUvzwzgfXRCm54LuydzV7r.FWI0saqJqTnnmBJeR4.buggGYAoLI3lX431ptpWdU3nMherCqjA'
+        client_secret: "$pbkdf2-sha512$310000$D2MkioGCj5SZbULAMyTixQ$QFENPGLjD5p4fUvzwzgfXRCm54LuydzV7r.FWI0saqJqTnnmBJeR4.buggGYAoLI3lX431ptpWdU3nMherCqjA"
         public: false
         require_pkce: false
-        pkce_challenge_method: ''
+        pkce_challenge_method: ""
         redirect_uris:
-          - 'https://gallery.orangepebble.net/auth/login'
-          - 'https://gallery.orangepebble.net/user-settings'
-          - 'app.immich:///oauth-callback'
+          - "https://gallery.orangepebble.net/auth/login"
+          - "https://gallery.orangepebble.net/user-settings"
+          - "app.immich:///oauth-callback"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
-          - 'immich_scope'
-        claims_policy: 'immich_policy'
+          - "openid"
+          - "profile"
+          - "email"
+          - "immich_scope"
+        claims_policy: "immich_policy"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        userinfo_signed_response_alg: 'RS256'
-        token_endpoint_auth_method: 'client_secret_post'
+          - "authorization_code"
+        userinfo_signed_response_alg: "RS256"
+        token_endpoint_auth_method: "client_secret_post"
 
-      - client_id: 'karakeep'
-        client_name: 'Karakeep'
-        authorization_policy: 'two_factor'
+      - client_id: "karakeep"
+        client_name: "Karakeep"
+        authorization_policy: "two_factor"
         # Generated using `authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986`.
-        client_secret: '$pbkdf2-sha512$310000$29s8U6aM0ybIKVNu4ae4zg$KSQrJ5/dMMPNkjcUuYc5YMF8J0Jn5ZdJKlJVLv0FrI3NJ.dmPAQul8OYi2lUl8/JL50dTPrwKNmz/GFIVKBaVw'
+        client_secret: "$pbkdf2-sha512$310000$29s8U6aM0ybIKVNu4ae4zg$KSQrJ5/dMMPNkjcUuYc5YMF8J0Jn5ZdJKlJVLv0FrI3NJ.dmPAQul8OYi2lUl8/JL50dTPrwKNmz/GFIVKBaVw"
         public: false
         require_pkce: false
-        pkce_challenge_method: ''
+        pkce_challenge_method: ""
         redirect_uris:
-          - 'https://bookmarks.orangepebble.net/api/auth/callback/custom'
+          - "https://bookmarks.orangepebble.net/api/auth/callback/custom"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'email'
-        claims_policy: 'karakeep_policy'
+          - "openid"
+          - "profile"
+          - "email"
+        claims_policy: "karakeep_policy"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'RS256'
-        userinfo_signed_response_alg: 'RS256'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "RS256"
+        userinfo_signed_response_alg: "RS256"
+        token_endpoint_auth_method: "client_secret_basic"
 
-      - client_id: 'open-webui'
-        client_name: 'Open WebUI'
-        authorization_policy: 'two_factor'
+      - client_id: "open-webui"
+        client_name: "Open WebUI"
+        authorization_policy: "two_factor"
         # Generated using `authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986`.
-        client_secret: '$pbkdf2-sha512$310000$nN8iP53aC1474t1jvdjlkA$aOT/MJzElu8EVfy5NKqJzouiX6y3nLBMDE35HZy/nLoSKQFuLsb47fPCaViagSKHC5jY5Zvt70KShJennK1KgQ'
+        client_secret: "$pbkdf2-sha512$310000$nN8iP53aC1474t1jvdjlkA$aOT/MJzElu8EVfy5NKqJzouiX6y3nLBMDE35HZy/nLoSKQFuLsb47fPCaViagSKHC5jY5Zvt70KShJennK1KgQ"
         public: false
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://ai.orangepebble.net/oauth/oidc/callback'
+          - "https://ai.orangepebble.net/oauth/oidc/callback"
         scopes:
-          - 'openid'
-          - 'profile'
-          - 'groups'
-          - 'email'
+          - "openid"
+          - "profile"
+          - "groups"
+          - "email"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
 
-      - client_id: 'forgejo'
-        client_name: 'Forgejo'
-        authorization_policy: 'two_factor'
+      - client_id: "forgejo"
+        client_name: "Forgejo"
+        authorization_policy: "two_factor"
         # Generated using `authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986`.
-        client_secret: '$pbkdf2-sha512$310000$uq3jLbMlggwlUiGV1P4nnw$wRkffC7HjfeUTCuxDm7Eq7caE8T5pUFIjsPD./YUtUare3TzWNN0u0eUBAeDpFQrkRL/EodWWe6B5UQ1S1xNMA'  # The digest of 'insecure_secret'.
+        client_secret: "$pbkdf2-sha512$310000$uq3jLbMlggwlUiGV1P4nnw$wRkffC7HjfeUTCuxDm7Eq7caE8T5pUFIjsPD./YUtUare3TzWNN0u0eUBAeDpFQrkRL/EodWWe6B5UQ1S1xNMA" # The digest of 'insecure_secret'.
         public: false
         require_pkce: true
-        pkce_challenge_method: 'S256'
+        pkce_challenge_method: "S256"
         redirect_uris:
-          - 'https://git.orangepebble.net/user/oauth2/authelia/callback'
+          - "https://git.orangepebble.net/user/oauth2/authelia/callback"
         scopes:
-          - 'openid'
-          - 'email'
-          - 'profile'
-          - 'groups'
-          - 'forgejo'
-        claims_policy: 'forgejo'
+          - "openid"
+          - "email"
+          - "profile"
+          - "groups"
+          - "forgejo"
+        claims_policy: "forgejo"
         response_types:
-          - 'code'
+          - "code"
         grant_types:
-          - 'authorization_code'
-        access_token_signed_response_alg: 'none'
-        userinfo_signed_response_alg: 'none'
-        token_endpoint_auth_method: 'client_secret_basic'
+          - "authorization_code"
+        access_token_signed_response_alg: "none"
+        userinfo_signed_response_alg: "none"
+        token_endpoint_auth_method: "client_secret_basic"
 
 authentication_backend:
   ldap:
-    implementation: 'lldap'
-    address: 'ldap://lldap:3890'
-    base_dn: 'DC=orangepebble,DC=net'
-    user: 'UID=authelia,OU=people,DC=orangepebble,DC=net'
+    implementation: "lldap"
+    address: "ldap://lldap:3890"
+    base_dn: "DC=orangepebble,DC=net"
+    user: "UID=authelia,OU=people,DC=orangepebble,DC=net"
     # Removing access to the 'authelia' user used by Authelia in the backend
     #  to change user passwords (and probably other things) because it doesn't
     #  need to be logged into.
@@ -203,39 +205,39 @@ authentication_backend:
         # The attribute names from LDAP.
         # These are added manually in the LDAP interface.
         immichquota:
-          name: 'immich_quota'
+          name: "immich_quota"
           multi_valued: false
-          value_type: 'integer'
+          value_type: "integer"
         forgejosshpubkey:
-          name: 'forgejo_sshpubkey'
+          name: "forgejo_sshpubkey"
           multi_valued: true
-          value_type: 'string'
+          value_type: "string"
 
 session:
   cookies:
-    - name: 'authelia_session'
-      domain: 'orangepebble.net' # Should match whatever your root protected domain is
-      authelia_url: 'https://auth.orangepebble.net'
-      expiration: '1 hour'
-      inactivity: '5 minutes'
+    - name: "authelia_session"
+      domain: "orangepebble.net" # Should match whatever your root protected domain is
+      authelia_url: "https://auth.orangepebble.net"
+      expiration: "1 hour"
+      inactivity: "5 minutes"
   redis:
-    host: 'redis'
+    host: "redis"
     port: 6379
 
 regulation:
   max_retries: 3
-  find_time: '2 minutes'
-  ban_time: '5 minutes'
+  find_time: "2 minutes"
+  ban_time: "5 minutes"
 
 storage:
   postgres:
-    address: 'tcp://postgres:5432'
-    username: 'authelia'
-    database: 'authelia'
+    address: "tcp://postgres:5432"
+    username: "authelia"
+    database: "authelia"
 
 notifier:
   smtp:
-    address: 'submission://smtp.gmail.com:587'
-    username: 'orangepebbleauth@gmail.com'
-    sender: 'OrangePebbleAuth <orangepebbleauth@gmail.com>'
-    subject: 'OrangePebbleAuth - {title}'
+    address: "submission://smtp.gmail.com:587"
+    username: "orangepebbleauth@gmail.com"
+    sender: "OrangePebbleAuth <orangepebbleauth@gmail.com>"
+    subject: "OrangePebbleAuth - {title}"
