@@ -10,7 +10,7 @@ let
 
   # Find new versions at:
   #  https://github.com/9001/copyparty/pkgs/container/copyparty-ac
-  copypartyImage = "ghcr.io/9001/copyparty-ac:1.20.14";
+  copypartyImage = "ghcr.io/9001/copyparty-ac:1.20.16";
 
   # Making a new config directory separate from /cfg, because other things
   #  are stored in /cfg that I don't want in the repo.

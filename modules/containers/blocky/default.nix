@@ -25,7 +25,7 @@ let
 
   # Find new versions at:
   #  https://github.com/0xERR0R/blocky/releases
-  blockyImage = "ghcr.io/0xerr0r/blocky:v0.29.0";
+  blockyImage = "ghcr.io/0xerr0r/blocky:v0.32.1";
 
   blockyConfigFile = funcs.relativeToAbsoluteConfigPath ./config.yaml;
 in

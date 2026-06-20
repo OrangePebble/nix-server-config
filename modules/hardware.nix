@@ -104,11 +104,21 @@
   ];
 
   # https://gist.github.com/lesserfish/8c0cfc6bb07c17c5af8a3759d2eb9e9a
+  # https://discourse.nixos.org/t/systemd-stage-1-migration/77113/7
   # This rollbacks / on every boot to cause impermanence.
   # Sub-directories like '/home' defined above aren't affected by this.
-  boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r zroot/root@blank
-  '';
+  boot.initrd.systemd.services.zfs-impermanence-rollback = {
+    wantedBy = [ "initrd.target" ];
+    # Dynamically generated service based on the zpool name ("zroot").
+    after = [ "zfs-import-zroot.service" ];
+    before = [ "sysroot.mount" ];
+    path = [ pkgs.zfs ];
+    unitConfig.DefaultDependencies = "no";
+    serviceConfig.Type = "oneshot";
+    script = ''
+      zfs rollback -r zroot/root@blank
+    '';
+  };
 
   services.zfs.autoScrub.enable = true;
   services.zfs.autoSnapshot = {

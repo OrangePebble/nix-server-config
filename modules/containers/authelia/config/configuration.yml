@@ -14,8 +14,8 @@ access_control:
   # https://www.authelia.com/configuration/security/access-control/#rule-matching
   rules:
     - domain:
-        - "git.orangepebble.net"
         # Uses Authelia as OAuth but shouldn't be behind it.
+        - "git.orangepebble.net"
         - "gallery.orangepebble.net"
         - "bookmarks.orangepebble.net"
       policy: "bypass"

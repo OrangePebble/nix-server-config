@@ -16,7 +16,7 @@ let
 
   # Find new versions at:
   #  https://codeberg.org/forgejo/-/packages/container/forgejo/versions
-  forgejoImage = "codeberg.org/forgejo/forgejo:15.0.2-rootless";
+  forgejoImage = "codeberg.org/forgejo/forgejo:15.0.3-rootless";
   # This is just the latest PostgreSQL version.
   postgresImage = "docker.io/postgres:18.1";
 
