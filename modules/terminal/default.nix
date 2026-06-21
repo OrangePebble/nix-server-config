@@ -78,8 +78,8 @@
       enable = true;
       config = {
         init.defaultBranch = "main";
-        user.name = "p-laranjinha";
-        user.email = "plcasimiro2000@gmail.com";
+        user.name = "OrangePebble";
+        user.email = "git@orangepebble.net";
 
         credential.helper = "store";
         core.pager = "delta";
