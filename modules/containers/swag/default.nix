@@ -43,6 +43,8 @@ let
       "${configDir}/open-webui.subdomain.conf";
     "${defaultConfigDir}/nginx/proxy-confs/forgejo.subdomain.conf" =
       "${configDir}/forgejo.subdomain.conf";
+    "${defaultConfigDir}/nginx/proxy-confs/syncyomi.subdomain.conf" =
+      "${configDir}/syncyomi.subdomain.conf";
   };
   containerUID = "1000";
   hostUID = toString (
@@ -119,6 +121,7 @@ in
           open-webui = "swag-open-webui";
           forgejo = "swag-forgejo";
           anubis = "swag-anubis";
+          syncyomi = "swag-syncyomi";
           # WARN: Everytime you change this, you need to remove
           #  '${defaultConfigDir}/nginx/resolver.conf' or else the
           #  new networks aren't used.

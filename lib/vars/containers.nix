@@ -30,6 +30,7 @@ let
       "forgejo"
       "forgejo-postgres"
       "anubis"
+      "syncyomi"
     ];
     # Unfortunately, I need to make this a list if I want to keep the order in
     #  the modifying function below. If I used an attrset, they would be sorted
@@ -86,6 +87,7 @@ let
       { forgejo.mainGroup = "forgejo"; }
       { forgejo-postgres.mainGroup = "forgejo-postgres"; }
       { anubis.mainGroup = "anubis"; }
+      { syncyomi.mainGroup = "syncyomi"; }
     ];
     dataDir = "${vars.homeDirectory}/container-data";
     publicDir = "${vars.homeDirectory}/public";

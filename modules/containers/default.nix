@@ -42,6 +42,7 @@ if enable then
       open-webui.enable = true;
       forgejo.enable = true;
       anubis.enable = true;
+      syncyomi.enable = true;
 
       blocky.autoStart = false;
       copyparty.autoStart = true;
@@ -54,6 +55,7 @@ if enable then
       open-webui.autoStart = true;
       forgejo.autoStart = true;
       anubis.autoStart = true;
+      syncyomi.autoStart = true;
     };
 
     # Run 'systemd-tmpfiles' to apply these rules manually.
