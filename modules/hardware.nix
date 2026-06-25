@@ -57,9 +57,9 @@
   # networking.interfaces.enp14s0.useDHCP = lib.mkDefault true;
   # networking.interfaces.wlp15s0.useDHCP = lib.mkDefault true;
 
-  networking.networkmanager.enable = true;
+  # networking.networkmanager.enable = true;
   # This makes the system wait for the network before booting. This also fails rebuild if enabled.
-  systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
+  # systemd.services.NetworkManager-wait-online.enable = lib.mkForce false;
 
   # I could've let disko configure everything, besides /home
   #  (because I have make zfs not mount it, as systemd also

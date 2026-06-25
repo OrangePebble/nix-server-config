@@ -31,7 +31,7 @@ if enable then
     #  from autostart.
     #  These can be removed manually in '~/.config/systemd/user/default.target.wants/'.
     opts.containers = {
-      blocky.enable = true;
+      blocky.enable = false;
       copyparty.enable = true;
       immich.enable = true;
       swag.enable = true;

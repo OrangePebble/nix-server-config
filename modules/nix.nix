@@ -119,6 +119,21 @@
 
   networking.interfaces.enp9s0.wakeOnLan.enable = true;
 
+  secrets.wifi = {
+    sopsFile = "${vars.secretsDirectory}/wifi";
+    format = "binary";
+    # Entire file.
+    key = "";
+    # Everyone can read.
+    mode = "0444";
+    owner = vars.username;
+  };
+  networking.wireless = {
+    enable = true;
+    secretsFile = config.sops.secrets.wifi.path;
+    networks."NOS-2FD0 2.4GHz".pskRaw = "ext:psk_home";
+  };
+
   services.tailscale = {
     enable = true;
     extraSetFlags = [
