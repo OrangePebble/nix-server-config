@@ -23,17 +23,6 @@ access_control:
       policy: "bypass"
 
     - domain:
-        - "files.orangepebble.net"
-      resources:
-        # Bypass auth so its possible to share files with anyone.
-        - "/shares"
-        # https://github.com/9001/copyparty/issues/84#issuecomment-2296785662
-        # Bypass auth for UI files.
-        - '^/\.cpr/[a-z0-9]+\.[a-z0-9\.]+$'
-        - '^/\.cpr/(tl/|deps/)?[a-z0-9]+\.[a-z0-9\.]+(\?.+)?$'
-      policy: "bypass"
-
-    - domain:
         - "music.orangepebble.net"
       resources:
         # Bypass auth so its possible to share files with anyone.
