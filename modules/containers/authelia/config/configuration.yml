@@ -33,6 +33,15 @@ access_control:
 
     - domain:
         - "files.orangepebble.net"
+      resources:
+        # Bypass auth so its possible to sync with this directory using multiple methods.
+        # I have to bypass with Authelia instead of nginx so that I can still access this
+        #  directory in the browser (as I'm logged in with Authelia).
+        - "/work/*"
+      policy: "bypass"
+
+    - domain:
+        - "files.orangepebble.net"
         - "music.orangepebble.net"
         - "ai.orangepebble.net"
       policy: "two_factor"

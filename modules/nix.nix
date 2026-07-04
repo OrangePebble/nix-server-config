@@ -104,6 +104,14 @@
   # Adds current flake to the registry so it can be accessed in things like the repl.
   nix.registry.config.flake = inputs.self;
 
+  # I need to persist this directory across reboots.
+  fileSystems."/etc/ssh" = {
+    device = "/persist/etc/ssh";
+    fsType = "none";
+    options = [ "bind" ];
+    # Don't check this "file system" for integrity.
+    noCheck = true;
+  };
   services.openssh = {
     enable = true;
     ports = [ 22 ];
@@ -134,6 +142,15 @@
     networks."NOS-2FD0 2.4GHz".pskRaw = "ext:psk_home";
   };
 
+  # https://github.com/tailscale/tailscale/issues/3039#issuecomment-1049084065
+  # I need to persist this directory across reboots.
+  fileSystems."/var/lib/tailscale" = {
+    device = "/persist/var/lib/tailscale";
+    fsType = "none";
+    options = [ "bind" ];
+    # Don't check this "file system" for integrity.
+    noCheck = true;
+  };
   services.tailscale = {
     enable = true;
     extraSetFlags = [
@@ -145,6 +162,15 @@
   # Required to be a tailscale exit node.
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
+
+  # Persist which users have sudoed so I don't get the first time message every time.
+  fileSystems."/var/db/sudo/lectured" = {
+    device = "/persist/var/db/sudo/lectured";
+    fsType = "none";
+    options = [ "bind" ];
+    # Don't check this "file system" for integrity.
+    noCheck = true;
+  };
 
   system.stateVersion = vars.stateVersion;
 }

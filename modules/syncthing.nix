@@ -1,12 +1,19 @@
 {
   vars,
-  pkgs,
   ...
 }:
 {
-  # Non-"home manager" syncthing fails to create this directory.
+  # Non-"home manager" syncthing fails to create '/var/lib/syncthing'.
+  # I need to persist this directory across reboots.
+  fileSystems."/var/lib/syncthing" = {
+    device = "/persist/var/lib/syncthing";
+    fsType = "none";
+    options = [ "bind" ];
+    # Don't check this "file system" for integrity.
+    noCheck = true;
+  };
   systemd.tmpfiles.rules = [
-    "d /var/lib/syncthing - ${vars.username} users - -"
+    "Z /var/lib/syncthing 755 ${vars.username} users - -"
   ];
   services.syncthing = {
     # WARNING: If something is wrong, syncthing will just not have any

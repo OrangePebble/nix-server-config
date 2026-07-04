@@ -39,6 +39,24 @@ in
       "d ${vars.containers.publicDir}/files/groups 2770 ${vars.username} public - -"
       "d ${vars.containers.publicDir}/files/public 2770 ${vars.username} public - -"
     ];
+    secrets =
+      builtins.mapAttrs
+        (
+          _: value:
+          {
+            format = "binary";
+            # Entire file.
+            key = "";
+            # Only the user and group can read and nothing else.
+            mode = "0440";
+            owner = vars.username;
+            group = localVars.mainGroup;
+          }
+          // value
+        )
+        {
+          copyparty-secret-config.sopsFile = ./secrets/secrets.conf;
+        };
     hm = {
       virtualisation.quadlet = {
         containers = {
@@ -49,14 +67,18 @@ in
               # Modified the entry pointfound here:
               #  https://github.com/9001/copyparty/blob/hovudstraum/scripts/docker/Dockerfile.ac
               # publishPorts = ["3923:3923"];
-              environments = {
-                PRTY_CONFIG = "/copyparty-config/main.conf";
-              };
+              exec = [
+                "-c"
+                "/copyparty-config/main.conf"
+                "-c"
+                "${config.secrets.copyparty-secret-config.path}"
+              ];
               volumes = [
                 "${vars.containers.publicDir}:/w"
                 "${copypartyConfigDir}:/copyparty-config"
                 "${copypartyCfgDir}:/cfg"
                 "${copypartyHistsDir}:/hists"
+                "${config.secrets.copyparty-secret-config.path}:${config.secrets.copyparty-secret-config.path}"
               ];
             };
           };
