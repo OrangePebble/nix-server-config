@@ -9,6 +9,75 @@
   # Obtained via `head -c 8 /etc/machine-id`, might require manually mounting
   #  /home on first boot.
   networking.hostId = "59718dc4";
+  networking.wireless = {
+    enable = true;
+    secretsFile = config.sops.secrets.wifi.path;
+    networks."NOS-2FD0 2.4GHz".pskRaw = "ext:psk_home";
+  };
+  secrets.wifi = {
+    sopsFile = "${vars.secretsDirectory}/wifi";
+    format = "binary";
+    # Entire file.
+    key = "";
+    # Everyone can read.
+    mode = "0444";
+    owner = vars.username;
+  };
+
+  # https://wiki.nixos.org/w/index.php?title=Internet_Connection_Sharing
+  # Set a static IP on the "downstream" interface
+  networking.interfaces."enp9s0" = {
+    useDHCP = false;
+    ipv4.addresses = [
+      {
+        address = "10.0.0.1";
+        prefixLength = 24;
+      }
+    ];
+  };
+  networking.firewall.extraCommands = ''
+    # Set up SNAT on packets going from downstream to the wider internet
+    iptables -t nat -A POSTROUTING -o wlp12s0f3u4 -j MASQUERADE
+
+    # Accept all connections from downstream. May not be necessary
+    iptables -A INPUT -i enp9s0 -j ACCEPT
+  '';
+  # Run a DHCP server on the downstream interface
+  services.kea.dhcp4 = {
+    enable = true;
+    settings = {
+      interfaces-config = {
+        interfaces = [
+          "enp9s0"
+        ];
+      };
+      lease-database = {
+        name = "/var/lib/kea/dhcp4.leases";
+        persist = true;
+        type = "memfile";
+      };
+      rebind-timer = 2000;
+      renew-timer = 1000;
+      subnet4 = [
+        {
+          id = 1;
+          pools = [
+            {
+              pool = "10.0.0.2 - 10.0.0.255";
+            }
+          ];
+          subnet = "10.0.0.1/24";
+        }
+      ];
+      valid-lifetime = 4000;
+      option-data = [
+        {
+          name = "routers";
+          data = "10.0.0.1";
+        }
+      ];
+    };
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.pebble = {
@@ -124,23 +193,6 @@
     };
   };
   services.fail2ban.enable = true;
-
-  networking.interfaces.enp9s0.wakeOnLan.enable = true;
-
-  secrets.wifi = {
-    sopsFile = "${vars.secretsDirectory}/wifi";
-    format = "binary";
-    # Entire file.
-    key = "";
-    # Everyone can read.
-    mode = "0444";
-    owner = vars.username;
-  };
-  networking.wireless = {
-    enable = true;
-    secretsFile = config.sops.secrets.wifi.path;
-    networks."NOS-2FD0 2.4GHz".pskRaw = "ext:psk_home";
-  };
 
   # https://github.com/tailscale/tailscale/issues/3039#issuecomment-1049084065
   # I need to persist this directory across reboots.
