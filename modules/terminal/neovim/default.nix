@@ -40,8 +40,5 @@
   environment.shellAliases = {
     vi = "nvim";
     vim = "nvim";
-    vi2 = "NVIM_APPNAME=nvim2 nvvi";
-    vim2 = "NVIM_APPNAME=nvim2 nvim";
-    nvim2 = "NVIM_APPNAME=nvim2 nvim";
   };
 }
