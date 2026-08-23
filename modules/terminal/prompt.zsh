@@ -77,7 +77,7 @@ precmd() { # cspell:disable-line
         fi
 
         # cmd
-        local cmd="$(fc -ln -1)"
+        # local cmd="$(fc -ln -1)"
         local color_cmd=""
         local command_result=$1
         if $command_result; then
@@ -86,7 +86,7 @@ precmd() { # cspell:disable-line
             color_cmd="$fg[red]"
         fi
         local color_reset="$reset_color"
-        local formatted_cmd="${color_cmd}[${last_cmd_return_code}]${color_reset} ${cmd}"
+        local formatted_cmd="${color_cmd}[${last_cmd_return_code}]${color_reset}"
 
         # time
         local time="[$(date +%H:%M:%S)]"
@@ -125,7 +125,7 @@ precmd() { # cspell:disable-line
 
         cost="${cost}s"
 
-        echo "\n$fg[magenta]${cost}${color_reset} ${formatted_cmd}"
+        echo "$fg[magenta]${cost}${color_reset} ${formatted_cmd}"
     }
 
     # last_cmd
