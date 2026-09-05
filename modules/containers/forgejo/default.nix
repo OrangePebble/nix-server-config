@@ -111,6 +111,8 @@ in
                 FORGEJO__security__LOGIN_REMEMBER_DAYS = "365";
 
                 FORGEJO__server__DISABLE_SSH = "true";
+
+                FORGEJO__repository__DEFAULT_REPO_UNITS = "repo.code";
               };
               volumes = [
                 "${forgejoDataDir}:/var/lib/gitea"
