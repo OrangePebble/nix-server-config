@@ -120,7 +120,10 @@
     '';
   };
 
-  services.zfs.autoScrub.enable = true;
+  services.zfs.autoScrub = {
+    enable = true;
+    interval = "weekly";
+  };
   services.zfs.autoSnapshot = {
     enable = true;
     flags = "-k -p --utc";
