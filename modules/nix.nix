@@ -78,6 +78,29 @@
       ];
     };
   };
+  # Kea, the DHCP server I'm using to share internet, cannot open its DHCP socket until a downstream device gives enp9s0 carrier.
+  # This service gets the carrier value every 2 seconds and restarts Kea if it turns to 1 (UP).
+  # There is a simpler and cleaner way to do this with udev rules but my internet card doesn't seem to emit the required change event.
+  systemd.services.kea-dhcp4-carrier-watcher = {
+    description = "Restart Kea DHCP4 when enp9s0 gains carrier";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "kea-dhcp4-server.service" ];
+    serviceConfig = {
+      Restart = "always";
+      RestartSec = 5;
+    };
+    script = ''
+      carrier=0
+      while true; do
+        next_carrier=$(< /sys/class/net/enp9s0/carrier)
+        if [ "$carrier" = 0 ] && [ "$next_carrier" = 1 ]; then
+          ${config.systemd.package}/bin/systemctl restart kea-dhcp4-server.service
+        fi
+        carrier=$next_carrier
+        sleep 2
+      done
+    '';
+  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.pebble = {
