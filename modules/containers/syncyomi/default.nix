@@ -10,7 +10,7 @@ let
 
   # Find new versions at:
   #  https://github.com/syncyomi/syncyomi/releases
-  syncyomiImage = "ghcr.io/syncyomi/syncyomi:v1.1.8";
+  syncyomiImage = "ghcr.io/syncyomi/syncyomi:v1.7.4";
 
   syncyomiDataDir = "${vars.containers.dataDir}/syncyomi/data";
 

@@ -10,7 +10,7 @@ let
 
   # Find new versions at:
   #  https://github.com/TecharoHQ/anubis/tags
-  anubisImage = "ghcr.io/techarohq/anubis:v1.25.0";
+  anubisImage = "ghcr.io/techarohq/anubis:v1.28.2";
 
   anubisDataDir = "${vars.containers.dataDir}/anubis/data";
 in

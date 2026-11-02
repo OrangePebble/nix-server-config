@@ -10,16 +10,19 @@ let
 
   # Find new versions at:
   #  https://github.com/karakeep-app/karakeep/releases
-  karakeepVersion = "0.32.0";
+  karakeepVersion = "0.34.1";
   karakeepImage = "ghcr.io/karakeep-app/karakeep:${karakeepVersion}";
-  # Find new versions for the following two at:
+  # Find new versions at:
+  #  https://github.com/karakeep-app/karakeep/pkgs/container/karakeep-chrome
+  chromeImage = "ghcr.io/karakeep-app/karakeep-chrome:156.0.8078.47-r1";
+  # Find new versions at:
   #  https://github.com/karakeep-app/karakeep/blob/main/docker/docker-compose.yml
-  chromeImage = "gcr.io/zenika-hub/alpine-chrome:124";
-  # https://www.meilisearch.com/docs/resources/migration/updating
-  # This requires more work to update: create snapshot before updating, update, stop systemd
-  #  service, run container with 'meilisearch --experimental-dumpless-upgrade', start systemd
-  #  service.
-  meilisearchImage = "getmeili/meilisearch:v1.41.0";
+  # https://docs.karakeep.com/administration/troubleshooting#upgrading-meilisearch---migrating-the-meilisearch-db-version
+  # Meilisearch is a pain to update (you can find more about it on https://www.meilisearch.com/docs/resources/migration/updating)
+  #  so almost follow the Karakeep guide: stop the service, delete the full volume, update,
+  #  start the service, then go to the website`s
+  #  `Admin Settings > Background Jobs > Reindex All Bookmarks`.
+  meilisearchImage = "getmeili/meilisearch:v1.55.0";
 
   karakeepDataDir = "${vars.containers.dataDir}/karakeep/data";
   meilisearchDataDir = "${vars.containers.dataDir}/karakeep/meilisearch-data";
@@ -110,17 +113,16 @@ in
               networks = [ "karakeep" ];
             };
           };
-          karakeep-chrome = funcs.containers.mkConfig "chrome" localVars.karakeep-chrome {
+          karakeep-chrome = funcs.containers.mkConfig "root" localVars.karakeep-chrome {
             inherit (config.opts.containers.karakeep) autoStart;
             containerConfig = {
               image = chromeImage;
               exec = [
-                "--no-sandbox"
                 "--disable-gpu"
                 "--disable-dev-shm-usage"
-                "--remote-debugging-address=0.0.0.0"
-                "--remote-debugging-port=9222"
                 "--hide-scrollbars"
+                "--disable-blink-features=AutomationControlled"
+                "--window-size=1440,900"
               ];
               environments = {
                 TZ = "Europe/Lisbon";

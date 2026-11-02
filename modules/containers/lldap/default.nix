@@ -10,9 +10,9 @@ let
   localVars = vars.containers.containers;
   # Find new versions at:
   #  https://github.com/lldap/lldap/pkgs/container/lldap/versions?filters[version_type]=tagged
-  lldapImage = "ghcr.io/lldap/lldap:2026-05-26-alpine-rootless";
+  lldapImage = "ghcr.io/lldap/lldap:2026-09-22-alpine-rootless";
   # This is just the latest PostgreSQL version.
-  postgresImage = "docker.io/postgres:18.1";
+  postgresImage = "docker.io/postgres:18.6";
   bootstrapDir = funcs.relativeToAbsoluteConfigPath ./bootstrap;
   postgresDataDir = "${vars.containers.dataDir}/lldap/postgres-data";
 in

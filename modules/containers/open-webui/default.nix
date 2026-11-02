@@ -16,9 +16,7 @@ let
 
   # Find new versions at:
   #  https://github.com/open-webui/open-webui/releases
-  # Not using the latest version at the time of writing because web search was broken:
-  #  https://github.com/open-webui/open-webui/issues/24560
-  openwebuiImage = "ghcr.io/open-webui/open-webui:v0.9.2-ollama";
+  openwebuiImage = "ghcr.io/open-webui/open-webui:v0.12.5-ollama";
 
   openwebuiDataDir = "${vars.containers.dataDir}/open-webui/data";
   ollamaDataDir = "${vars.containers.dataDir}/open-webui/ollama-data";

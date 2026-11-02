@@ -16,9 +16,9 @@ let
 
   # Find new versions at:
   #  https://codeberg.org/forgejo/-/packages/container/forgejo/versions
-  forgejoImage = "codeberg.org/forgejo/forgejo:15.0.3-rootless";
+  forgejoImage = "codeberg.org/forgejo/forgejo:17.0.1-rootless";
   # This is just the latest PostgreSQL version.
-  postgresImage = "docker.io/postgres:18.1";
+  postgresImage = "docker.io/postgres:18.6";
 
   forgejoDataDir = "${vars.containers.dataDir}/forgejo/data";
   postgresDataDir = "${vars.containers.dataDir}/forgejo/postgres-data";
