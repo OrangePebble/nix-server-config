@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   vars,
@@ -25,8 +26,8 @@
   hm = {
     home = {
       username = vars.username;
-      homeDirectory = vars.homeDirectory;
-      stateVersion = vars.stateVersion;
+      homeDirectory = config.users.users.${vars.username}.home;
+      stateVersion = config.system.stateVersion;
     };
 
     # Nicely reload system units when changing configs.

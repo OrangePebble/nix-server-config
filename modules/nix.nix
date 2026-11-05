@@ -15,7 +15,7 @@
     networks."NOS-2FD0 2.4GHz".pskRaw = "ext:psk_home";
   };
   secrets.wifi = {
-    sopsFile = "${vars.secretsDirectory}/wifi";
+    sopsFile = ../secrets/wifi;
     format = "binary";
     # Entire file.
     key = "";
@@ -105,7 +105,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.pebble = {
     isNormalUser = true;
-    description = vars.fullname;
+    description = "OrangePebble";
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
     hashedPasswordFile = config.secrets.password.path;
     openssh.authorizedKeys.keys = [
@@ -113,7 +113,7 @@
     ];
   };
   secrets.password = {
-    sopsFile = "${vars.secretsDirectory}/password";
+    sopsFile = ../secrets/password;
     format = "binary";
     # Entire file.
     key = "";
@@ -123,7 +123,7 @@
     neededForUsers = true;
   };
   secrets.smtp-password = {
-    sopsFile = "${vars.secretsDirectory}/smtp-password";
+    sopsFile = ../secrets/smtp-password;
     format = "binary";
     # Entire file.
     key = "";
@@ -247,5 +247,5 @@
     noCheck = true;
   };
 
-  system.stateVersion = vars.stateVersion;
+  system.stateVersion = "24.05";
 }

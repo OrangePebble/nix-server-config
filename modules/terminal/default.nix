@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   vars,
   funcs,
@@ -7,8 +8,6 @@
 }:
 {
   imports = [
-    ./neovim
-
     # Tool to locate the nixpkgs package providing a certain file. Used by comma.
     # Unlike regular nix-index, this one includes an automatically updated database, and so I don't
     #  need to manually update it every once in a while.
@@ -34,9 +33,11 @@
 
       # Runs a script that rebuild switches this config.
       nixs = toString (funcs.mkMutableConfigSymlink ./nixs.sh);
-      nixb = "sudo nixos-rebuild build --flake ${vars.configDirectory}";
+      nixb = "sudo nixos-rebuild build --flake ${
+        config.users.users.${vars.username}.home
+      }/nix-server-config";
       nixl = "nixos-rebuild list-generations";
-      nixu = "nix flake update --flake ${vars.configDirectory}";
+      nixu = "nix flake update --flake ${config.users.users.${vars.username}.home}/nix-server-config";
       nixd = "nix develop -c $SHELL";
       nixp = "nix-shell --run $SHELL -p";
 
@@ -47,10 +48,10 @@
         in rec {
           inherit self;
           inherit (self) inputs lib;
-          inherit (self.nixosConfigurations) ${vars.hostname};
-          inherit (self.nixosConfigurations ${vars.hostname}) pkgs;
-          inherit (self.nixosConfigurations.${vars.hostname}._module.specialArgs) vars;
-          inherit (self.nixosConfigurations.${vars.hostname}._module.args) funcs;
+          inherit (self.nixosConfigurations) ${config.networking.hostName};
+          inherit (self.nixosConfigurations ${config.networking.hostName}) pkgs;
+          inherit (self.nixosConfigurations.${config.networking.hostName}._module.specialArgs) vars;
+          inherit (self.nixosConfigurations.${config.networking.hostName}._module.args) funcs;
         }
       ''}";
     };
@@ -80,9 +81,8 @@
         init.defaultBranch = "main";
         user.name = "OrangePebble";
         user.email = "git@orangepebble.net";
-
-        credential.helper = "store";
         core.pager = "delta";
+        credential.helper = "store";
         interactive.diffFilter = "delta --color-only";
         delta = {
           navigate = "true"; # use n and N to move between diff sections
@@ -91,6 +91,7 @@
           hyperlinks = "true";
         };
         merge.conflictStyle = "zdiff3";
+        pull.ff = "only";
       };
       # Git extension for versioning large files (Git Large File Storage).
       lfs.enable = true;
@@ -110,7 +111,7 @@
       # Required for zoxide to set the 'z' and 'zi' commands when set with home manager.
       enable = true;
       # Removes rebuild warning.
-      dotDir = "${vars.homeDirectory}/.config/zsh";
+      dotDir = "${config.users.users.${vars.username}.home}/.config/zsh";
     };
   };
 

@@ -35,7 +35,7 @@
     defaultEditor = true;
   };
   hm = {
-    home.file.".config/nvim".source = funcs.mkMutableConfigSymlink ./config;
+    home.file.".config/nvim".source = funcs.mkMutableConfigSymlink ./neovim-config;
   };
   environment.shellAliases = {
     vi = "nvim";

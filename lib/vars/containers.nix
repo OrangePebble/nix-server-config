@@ -1,4 +1,4 @@
-vars:
+_:
 let
   containers = {
     # How many uids and gids the containers will have allocated to them.
@@ -89,8 +89,8 @@ let
       { anubis.mainGroup = "anubis"; }
       { syncyomi.mainGroup = "syncyomi"; }
     ];
-    dataDir = "${vars.homeDirectory}/container-data";
-    publicDir = "${vars.homeDirectory}/public";
+    dataDir = "/home/pebble/container-data";
+    publicDir = "/home/pebble/public";
     rootCapabilities = [
       "CHOWN"
       "DAC_OVERRIDE"

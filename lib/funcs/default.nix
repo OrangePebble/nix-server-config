@@ -35,7 +35,11 @@ with lib;
       #  folders deep in the config `(toString ./../..)' is equivalent to the store
       #  directory.
       relativeToAbsoluteConfigPath =
-        path: (vars.configDirectory + removePrefix (toString ./../..) (toString path));
+        path:
+        (
+          "${config.users.users.${vars.username}.home}/nix-server-config"
+          + removePrefix (toString ./../..) (toString path)
+        );
 
       # Creates symlinks to these config files that can be changed without rebuilding.
       mkMutableConfigSymlink = path: funcs.mkOutOfStoreSymlink (funcs.relativeToAbsoluteConfigPath path);

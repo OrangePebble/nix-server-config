@@ -129,6 +129,5 @@
     flags = "-k -p --utc";
   };
 
-  nixpkgs.hostPlatform = lib.mkDefault vars.hostPlatform;
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
