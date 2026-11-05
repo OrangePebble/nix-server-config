@@ -2,6 +2,7 @@
   inputs,
   lib,
   vars,
+  funcs,
   ...
 }:
 {
@@ -16,7 +17,7 @@
     verbose = true;
     backupFileExtension = "backup";
     overwriteBackup = false;
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs vars funcs; };
     # For modules shared by all users;
     sharedModules = [ ];
   };
