@@ -1,0 +1,95 @@
+# This is mostly taken from https://github.com/TecharoHQ/anubis/blob/v1.28.2/data/botPolicies.yaml
+# so it may need updating when I bump Anubis versions.
+
+bots:
+  # https://github.com/TecharoHQ/anubis/issues/2068
+  # v1.28.0 broke git requests so this fixes it.
+  # This also only allows smart git protocol so it should still block most bots.
+  - name: allow-git-smart-http
+    action: ALLOW
+    expression:
+      all:
+        - >
+          (  
+            userAgent.startsWith("Git/") ||
+            userAgent.startsWith("git/") ||
+            userAgent.contains("libgit") ||
+            userAgent.startsWith("go-git") ||
+            userAgent.startsWith("JGit/") ||
+            userAgent.startsWith("JGit-") ||
+            userAgent.startsWith("Git-Credential-Manager/") ||
+            userAgent.startsWith("Go-http-client/")
+          )
+        - '"Accept-Encoding" in headers'
+        - headers["Accept-Encoding"].contains("gzip")
+        # # Only clone and fetch use version 2
+        # - '"Git-Protocol" in headers'
+        # - headers["Git-Protocol"] == "version=2"
+        - >
+          (
+            path.endsWith("/info/refs") ||
+            path.endsWith("/git-upload-pack") ||
+            path.endsWith("/git-receive-pack") ||
+            path.endsWith("/git-upload-archive") ||
+            path.endsWith("/login/oauth/access_token")
+          )
+
+  # This imports the entire default bot config.
+  - import: (data)/meta/default-config.yaml
+
+dnsbl: false
+
+honeypot:
+  enabled: true
+  implementation: naive
+
+openGraph:
+  enabled: false
+  considerHost: false
+  ttl: 24h
+
+status_codes:
+  CHALLENGE: 200
+  DENY: 200
+
+store:
+  backend: memory
+  parameters: {}
+
+thresholds:
+  - name: minimal-suspicion
+    expression: weight <= 0
+    action: ALLOW
+  - name: mild-suspicion
+    expression:
+      all:
+        - weight > 0
+        - weight < 10
+    action: CHALLENGE
+    challenge:
+      algorithm: metarefresh
+      difficulty: 1
+  - name: moderate-suspicion
+    expression:
+      all:
+        - weight >= 10
+        - weight < 20
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 2
+  - name: mild-proof-of-work
+    expression:
+      all:
+        - weight >= 20
+        - weight < 30
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 4
+  - name: extreme-suspicion
+    expression: weight >= 30
+    action: CHALLENGE
+    challenge:
+      algorithm: fast
+      difficulty: 6

@@ -13,6 +13,7 @@ let
   anubisImage = "ghcr.io/techarohq/anubis:v1.28.2";
 
   anubisDataDir = "${vars.containers.dataDir}/anubis/data";
+  botPoliciesFile = funcs.relativeToAbsoluteConfigPath ./botPolicies.yaml;
 in
 {
   options.opts.containers.anubis = {
@@ -60,6 +61,7 @@ in
               environments = {
                 COOKIE_DOMAIN = "orangepebble.net";
                 REDIRECT_DOMAINS = "orangepebble.net,*.orangepebble.net";
+                POLICY_FNAME = "/etc/anubis/botPolicies.yaml";
                 TARGET = "unix:/run/anubis/nginx.sock";
                 SERVE_ROBOTS_TXT = "true";
                 DIFFICULTY = "10"; # Couldn't find what would be a good value so I just chose 10.
@@ -67,6 +69,7 @@ in
               };
               volumes = [
                 "${anubisDataDir}:/data"
+                "${botPoliciesFile}:/etc/anubis/botPolicies.yaml:ro"
                 "${vars.containers.dataDir}/anubis/socket:/run/anubis"
                 "${config.secrets.anubis-private-key.path}:${config.secrets.anubis-private-key.path}"
               ];
