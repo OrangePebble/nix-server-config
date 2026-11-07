@@ -16,6 +16,7 @@
 
   users.defaultUserShell = pkgs.zsh;
   environment = {
+    sessionVariables.COLORTERM = "truecolor";
     shells = with pkgs; [
       zsh
       bash
